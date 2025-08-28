@@ -12,3 +12,4 @@ C:\Users\weema\OneDrive\Desktop\C#\Assignment 1\obj\Debug\net8.0\refint\Assignme
 C:\Users\weema\OneDrive\Desktop\C#\Assignment 1\obj\Debug\net8.0\Assignment 1.pdb
 C:\Users\weema\OneDrive\Desktop\C#\Assignment 1\obj\Debug\net8.0\Assignment 1.genruntimeconfig.cache
 C:\Users\weema\OneDrive\Desktop\C#\Assignment 1\obj\Debug\net8.0\ref\Assignment 1.dll
+C:\Users\weema\OneDrive\Desktop\C#\Assignment 1\obj\Debug\net8.0\Assignment 1.sourcelink.json
