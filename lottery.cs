@@ -32,96 +32,108 @@ class Program
     }
     static void Main()
     {
-        int drawSize = 6;
-        int minNumber = 1;
-        int maxNumber = 40;
+        string playAgain;
 
-        int[] userNumbers = new int[drawSize];
-
-        //random numbers here first for debugging
-
-        Random rnd = new Random();
-        int[] randomNumbers = new int[drawSize];
-
-        for (int i = 0; i < drawSize; i++)
+        do
         {
-            randomNumbers[i] = rnd.Next(minNumber, maxNumber + 1);
-        }
-        Array.Sort(randomNumbers);
+            int drawSize = 6;
+            int minNumber = 1;
+            int maxNumber = 40;
 
-        Console.Write("The random numbers are: ");
-        Console.WriteLine(string.Join(", ", randomNumbers));
+            int[] userNumbers = new int[drawSize];
 
-        while (true)
-        {
-            Console.WriteLine("\nEnter " + drawSize + " numbers between " + minNumber + " and " + maxNumber + "\n(You must use a space between each number)\n");
-            string[] parts = Console.ReadLine().Split(' ');
+            //random numbers here first for testing
+            int count = 0;
+            Random rnd = new Random();
+            int[] randomNumbers = new int[drawSize];
 
-            if (parts.Length != drawSize)
+            while (count < drawSize)
             {
-                Console.WriteLine("You must enter exactly " + drawSize + " numbers. Try again.\n");
-                continue;
+                int nextNumber = rnd.Next(minNumber, maxNumber + 1);
+                if (Array.IndexOf(randomNumbers, nextNumber) == -1)
+                {
+                    randomNumbers[count] = nextNumber;
+                    count++;
+                }
+            }
+            Array.Sort(randomNumbers);
+
+            Console.Write("The random numbers are: ");
+            Console.WriteLine(string.Join(", ", randomNumbers));
+
+            while (true)
+            {
+                Console.WriteLine("\nEnter " + drawSize + " numbers between " + minNumber + " and " + maxNumber + "\n(You must use a space between each number)\n");
+                string[] parts = Console.ReadLine().Split(' ');
+
+                if (parts.Length != drawSize)
+                {
+                    Console.WriteLine("You must enter exactly " + drawSize + " numbers. Try again.\n");
+                    continue;
+                }
+
+                bool allValid = true;
+                for (int i = 0; i < drawSize; i++)
+                {
+                    if (int.TryParse(parts[i], out int number) && number >= minNumber && number <= maxNumber)
+                    {
+                        userNumbers[i] = number;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Boooo. Don't you know how a lotto works? " + parts[i] + " is an invalid entry. You must try again.\n");
+                        allValid = false;
+                        break;
+                    }
+                }
+
+                if (allValid) break;
             }
 
-            bool allValid = true;
-            for (int i = 0; i < drawSize; i++)
+            Console.WriteLine("\nYour numbers are: " + string.Join(", ", userNumbers) + "\n");
+
+            //random number block here later
+
+            int matches = 0;
+
+            foreach (int userPick in userNumbers)
             {
-                if (int.TryParse(parts[i], out int number) && number >= minNumber && number <= maxNumber)
+                //int result = LinearSearch(randomNumbers, userPick);
+                //if (result != -1)
+                //    Console.WriteLine(userPick + " was drawn! :) (Linear, index " + result + ")");
+                //else
+                //    Console.WriteLine(userPick + " was not drawn :( (Linear)");
+
+                int binaryResult = BinarySearch(randomNumbers, userPick, 0, randomNumbers.Length - 1);
+                if (binaryResult != -1)
                 {
-                    userNumbers[i] = number;
+                    Console.WriteLine(userPick + " was drawn! :) (Binary, index " + binaryResult + ")\n");
+                    matches++;
                 }
                 else
                 {
-                    Console.WriteLine("Boooo. Don't you know how a lotto works? " + parts[i] + " is an invalid entry. You must try again.\n");
-                    allValid = false;
-                    break;
+                    Console.WriteLine(userPick + " was not drawn :( (Binary)\n");
                 }
             }
-
-            if (allValid) break;
-        }
-
-        Console.WriteLine("\nYour numbers are: " + string.Join(", ", userNumbers) + "\n");
-
-        //random number block here later
-
-        int matches = 0;
-
-        foreach (int userPick in userNumbers)
-        {
-        //int result = LinearSearch(randomNumbers, userPick);
-        //if (result != -1)
-        //    Console.WriteLine(userPick + " was drawn! :) (Linear, index " + result + ")");
-        //else
-        //    Console.WriteLine(userPick + " was not drawn :( (Linear)");
-
-            int binaryResult = BinarySearch(randomNumbers, userPick, 0, randomNumbers.Length - 1);
-            if (binaryResult != -1)
+            if (matches == drawSize)
             {
-                Console.WriteLine(userPick + " was drawn! :) (Binary, index " + binaryResult + ")\n");
-                matches++;
+                Console.WriteLine("Congratulations! You won the jackpot lottery!");
+            }
+            else if (matches > 0)
+            {
+                Console.WriteLine("You got " + matches + " lucky numbers.");
             }
             else
             {
-                Console.WriteLine(userPick + " was not drawn :( (Binary)\n");
+                Console.WriteLine("You didn't get any lucky numbers. Loser.");
             }
-        }
-        if (matches == drawSize)
-        {
-            Console.WriteLine("Congratulations! You won the jackpot lottery!");
-        }
-        else if (matches > 0)
-        {
-            Console.WriteLine("You got " + matches + " lucky numbers.");
-        }
-        else
-        {
-            Console.WriteLine("You didn't get any lucky numbers. Loser.");
-        }
-        
 
-        
+            Console.WriteLine("\nDo you want to play again? (Y/N)");
+            playAgain = Console.ReadLine();
 
+        } while (playAgain.ToUpper() == "Y");
+
+        Console.WriteLine("Thank you for playing. Goodbye");
     }
 }
 
